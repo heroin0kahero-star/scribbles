@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en" class="intro-active">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scribbles | Kids Learning — Helping Children Master English</title>
+    <meta
+      name="description"
+      content="Scribbles | Kids Learning in Lucknow helps children build English confidence through phonics, communication, grammar, early learning, tuition, and Reading Detective."
+    />
+    <meta property="og:title" content="Scribbles | Kids Learning — Helping Children Master English" />
+    <meta
+      property="og:description"
+      content="Interactive, visual, understanding-led English learning for children in Lucknow and online. Learn. Understand. Express."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Scribbles | Kids Learning" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Scribbles | Kids Learning — Helping Children Master English" />
+    <meta
+      name="twitter:description"
+      content="Helping children build confidence in English through phonics, communication, grammar and meaningful learning experiences."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..600&family=Nunito+Sans:ital,opsz,wght@0,6..12,400..700;1,6..12,400..600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      html.intro-active,
+      html.intro-active body {
+        overflow: hidden !important;
+        height: 100%;
+      }
+
+      #scribbles-intro {
+        position: fixed;
+        inset: 0;
+        z-index: 2147483647;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: #fcf8f5;
+      }
+
+      #scribbles-intro.is-fading {
+        opacity: 0;
+        transition: opacity 500ms ease;
+      }
+
+      #scribbles-intro-video,
+      #scribbles-intro-still {
+        display: block;
+        width: min(88vw, 840px);
+        height: auto;
+        max-width: none;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        object-fit: contain;
+      }
+
+      #scribbles-intro-still {
+        display: none;
+      }
+    </style>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "EducationalOrganization",
+        "name": "Scribbles | Kids Learning",
+        "description": "Educational initiative in Lucknow helping children master English through online Phonics, Communication, and Grammar, and offline Early Learning and Tuition.",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Lucknow",
+          "addressCountry": "IN"
+        },
+        "sameAs": [
+          "https://www.instagram.com/scribbles.lucknow/"
+        ]
+      }
+    </script>
+  </head>
+  <body class="bg-[#FFF8ED] text-[#26352F] antialiased selection:bg-[#F5CB65]/50 selection:text-[#26352F]">
+    <div id="scribbles-intro" aria-hidden="true">
+      <video
+        id="scribbles-intro-video"
+        src="/assets/intro/scribbles-logo-intro.mp4"
+        autoplay
+        muted
+        playsinline
+        preload="auto"
+        disablepictureinpicture
+        width="1600"
+        height="800"
+      ></video>
+      <img
+        id="scribbles-intro-still"
+        src="/assets/intro/scribbles-logo-final.png"
+        alt=""
+        width="1600"
+        height="800"
+      />
+    </div>
+
+    <script>
+      (function () {
+        'use strict';
+
+        // Set to true to play only once per browser tab/session.
+        var SHOW_ONCE_PER_SESSION = false;
+
+        var SESSION_KEY = 'scribbles-intro-shown';
+        var overlay = document.getElementById('scribbles-intro');
+        var video = document.getElementById('scribbles-intro-video');
+        var still = document.getElementById('scribbles-intro-still');
+
+        function removeOverlay() {
+          if (overlay && overlay.parentNode) {
+            overlay.parentNode.removeChild(overlay);
+          }
+          document.documentElement.classList.remove('intro-active');
+          // Look this up at cleanup time: React may not have mounted yet when the
+          // inline script first runs.
+          var appRoot = document.getElementById('root');
+          if (appRoot) {
+            appRoot.removeAttribute('inert');
+          }
+        }
+
+        if (SHOW_ONCE_PER_SESSION) {
+          try {
+            if (window.sessionStorage && sessionStorage.getItem(SESSION_KEY) === '1') {
+              removeOverlay();
+              return;
+            }
+            sessionStorage.setItem(SESSION_KEY, '1');
+          } catch (e) {
+            /* Storage may be unavailable; play normally. */
+          }
+        }
+
+        if (!overlay || !video || !still) {
+          removeOverlay();
+          return;
+        }
+
+        var done = false;
+        var fallbackStarted = false;
+        var endTimer;
+        var startTimer;
+        var hardTimer;
+        var fadeTimer;
+
+        function clearTimers() {
+          clearTimeout(endTimer);
+          clearTimeout(startTimer);
+          clearTimeout(hardTimer);
+          clearTimeout(fadeTimer);
+        }
+
+        function finish() {
+          if (done) {
+            return;
+          }
+          done = true;
+          clearTimers();
+          removeOverlay();
+        }
+
+        function fadeOutAfter(delay) {
+          if (done) {
+            return;
+          }
+          clearTimeout(endTimer);
+          endTimer = setTimeout(function () {
+            if (done) {
+              return;
+            }
+            overlay.classList.add('is-fading');
+            fadeTimer = setTimeout(finish, 500);
+          }, delay);
+        }
+
+        function showStillThenFade(delay) {
+          if (done || fallbackStarted) {
+            return;
+          }
+          fallbackStarted = true;
+          clearTimeout(startTimer);
+          try {
+            video.pause();
+          } catch (e) {
+            /* Ignore. */
+          }
+          video.style.display = 'none';
+          still.style.display = 'block';
+          fadeOutAfter(delay);
+        }
+
+        // Absolute last-resort cleanup, regardless of video state.
+        hardTimer = setTimeout(finish, 5000);
+
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          showStillThenFade(600);
+          return;
+        }
+
+        video.addEventListener('ended', function () {
+          fadeOutAfter(250);
+        });
+        video.addEventListener('error', function () {
+          showStillThenFade(800);
+        });
+        video.addEventListener('playing', function () {
+          clearTimeout(startTimer);
+        });
+        video.addEventListener('stalled', function () {
+          if (video.currentTime < 0.05) {
+            showStillThenFade(800);
+          }
+        });
+
+        startTimer = setTimeout(function () {
+          if (video.paused || video.readyState < 2) {
+            showStillThenFade(800);
+          }
+        }, 1500);
+
+        try {
+          var playResult = video.play();
+          if (playResult && typeof playResult.catch === 'function') {
+            playResult.catch(function () {
+              showStillThenFade(800);
+            });
+          }
+        } catch (e) {
+          showStillThenFade(800);
+        }
+      })();
+    </script>
+
+    <div id="root" inert></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

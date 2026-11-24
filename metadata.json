@@ -1,0 +1,6 @@
+{
+  "name": "Scribbles | Kids Learning",
+  "description": "Helping children in Lucknow and online master English through phonics, communication, grammar, early learning, tuition, and the Reading Detective lab.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
