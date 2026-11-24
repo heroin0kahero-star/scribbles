@@ -1,5 +1,5 @@
 {
-  "name": "scribbles-sample-site",
+  "name": "scribble-sample-site",
   "framework": "vite",
   "installCommand": "npm install --legacy-peer-deps",
   "buildCommand": "npm run build",
